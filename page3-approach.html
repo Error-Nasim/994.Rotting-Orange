@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 3: Solution Strategy</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="page2-bfs-concept.html">← Previous</a>
+      <span class="nav-title">Page 3: Solution Strategy</span>
+      <a href="page4-visualization.html" class="next-btn"
+        >Next: Visualization →</a
+      >
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>🎯 The Complete Solution Strategy</h1>
+        <p class="subtitle">
+          Breaking down the algorithm into crystal-clear steps
+        </p>
+      </header>
+
+      <section class="content-section">
+        <h2>The Big Picture: What Do We Need To Track?</h2>
+
+        <div class="concept-box">
+          <p>
+            <strong>Think about what information we absolutely NEED:</strong>
+          </p>
+          <ol style="margin-top: 15px; margin-left: 25px; line-height: 2">
+            <li>
+              <strong>Where are ALL the rotten oranges?</strong> (our BFS
+              starting points)
+            </li>
+            <li>
+              <strong>How many fresh oranges exist?</strong> (so we know when
+              we're done)
+            </li>
+            <li>
+              <strong>How much time has passed?</strong> (the answer we're
+              looking for)
+            </li>
+            <li>
+              <strong>Which cells have we visited?</strong> (to avoid infinite
+              loops)
+            </li>
+          </ol>
+        </div>
+
+        <h2>Step-by-Step Game Plan</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Step 1: Scan the Entire Grid</h3>
+            <p><strong>Goal:</strong> Gather initial information</p>
+            <pre
+              style="
+                background: #f0f4ff;
+                color: #333;
+                border-left: 5px solid #667eea;
+              "
+            >
+# Walk through every cell
+for each row in grid:
+    for each cell in row:
+        if cell == 1 (fresh):
+            fresh_count += 1
+        if cell == 2 (rotten):
+            add to queue</pre
+            >
+            <p style="margin-top: 15px">
+              <strong>Why?</strong> We need to know where to START (all rotten)
+              and when to STOP (fresh count reaches 0)
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Step 2: Check Edge Case</h3>
+            <p><strong>Goal:</strong> Handle the easy case</p>
+            <pre
+              style="
+                background: #f0f4ff;
+                color: #333;
+                border-left: 5px solid #667eea;
+              "
+            >
+if fresh_count == 0:
+    return 0  # Already done!</pre
+            >
+            <p style="margin-top: 15px">
+              <strong>Why?</strong> If there are no fresh oranges to rot, the
+              answer is immediately 0!
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Step 3: BFS Simulation</h3>
+            <p><strong>Goal:</strong> Simulate the spread minute-by-minute</p>
+            <pre
+              style="
+                background: #f0f4ff;
+                color: #333;
+                border-left: 5px solid #667eea;
+              "
+            >
+minutes = 0
+
+while queue is not empty AND fresh_count > 0:
+    # Process entire level = 1 minute
+    level_size = len(queue)
+    minutes += 1
+    
+    for i in range(level_size):
+        current_cell = queue.popleft()
+        
+        # Try all 4 directions
+        for each direction (up, down, left, right):
+            neighbor = get_neighbor()
+            
+            if neighbor is fresh:
+                make it rotten
+                fresh_count -= 1
+                queue.append(neighbor)</pre
+            >
+            <p style="margin-top: 15px">
+              <strong>Why?</strong> This is the core BFS logic that spreads rot
+              level-by-level
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Step 4: Return Result</h3>
+            <p><strong>Goal:</strong> Determine success or failure</p>
+            <pre
+              style="
+                background: #f0f4ff;
+                color: #333;
+                border-left: 5px solid #667eea;
+              "
+            >
+if fresh_count > 0:
+    return -1  # Some oranges couldn't be reached
+else:
+    return minutes  # Success!</pre
+            >
+            <p style="margin-top: 15px">
+              <strong>Why?</strong> If fresh oranges remain after BFS finishes,
+              they're isolated and unreachable
+            </p>
+          </div>
+        </div>
+
+        <h2>The Direction Pattern</h2>
+        <p>To check neighbors in all 4 directions, we use a clever trick:</p>
+
+        <div class="concept-box">
+          <h3>Understanding Direction Vectors</h3>
+          <p>
+            Instead of writing 4 separate if-statements, we use a list of
+            direction changes:
+          </p>
+          <pre style="background: #2d2d2d; color: #a5d6a7">
+directions = [
+    (-1, 0),  # UP: row decreases by 1
+    (1, 0),   # DOWN: row increases by 1
+    (0, -1),  # LEFT: column decreases by 1
+    (0, 1)    # RIGHT: column increases by 1
+]
+
+# To get all neighbors of cell (r, c):
+for dr, dc in directions:
+    new_row = r + dr
+    new_col = c + dc
+    # Now check if (new_row, new_col) is valid</pre
+          >
+
+          <p style="margin-top: 20px"><strong>Visual explanation:</strong></p>
+          <div
+            style="
+              background: white;
+              padding: 20px;
+              border-radius: 10px;
+              display: inline-block;
+              margin-top: 10px;
+            "
+          >
+            <p style="margin-bottom: 10px">If we're at position (2, 2):</p>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(5, 40px);
+                gap: 5px;
+              "
+            >
+              <div></div>
+              <div
+                style="background: #e0e0e0; padding: 10px; text-align: center"
+              >
+                ↑<br />(1,2)
+              </div>
+              <div></div>
+              <div></div>
+              <div></div>
+
+              <div
+                style="background: #e0e0e0; padding: 10px; text-align: center"
+              >
+                ←<br />(2,1)
+              </div>
+              <div
+                style="
+                  background: #667eea;
+                  color: white;
+                  padding: 10px;
+                  text-align: center;
+                  font-weight: bold;
+                "
+              >
+                YOU<br />(2,2)
+              </div>
+              <div
+                style="background: #e0e0e0; padding: 10px; text-align: center"
+              >
+                →<br />(2,3)
+              </div>
+              <div></div>
+              <div></div>
+
+              <div></div>
+              <div
+                style="background: #e0e0e0; padding: 10px; text-align: center"
+              >
+                ↓<br />(3,2)
+              </div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+
+        <h2>Boundary Checking: Don't Fall Off The Grid!</h2>
+
+        <div class="critical-box">
+          <p>
+            <strong>Critical Check:</strong> Before accessing any cell, verify
+            it's inside the grid!
+          </p>
+          <pre style="background: #2d2d2d; color: #a5d6a7; margin-top: 15px">
+# For a grid with 'rows' rows and 'cols' columns:
+if 0 <= new_row < rows and 0 <= new_col < cols:
+    # Safe to access grid[new_row][new_col]
+    if grid[new_row][new_col] == 1:  # It's fresh!
+        # Make it rotten
+        grid[new_row][new_col] = 2
+        fresh_count -= 1
+        queue.append((new_row, new_col))</pre
+          >
+          <p style="margin-top: 15px">
+            <strong>Why this matters:</strong> Accessing
+            <code>grid[-1][0]</code> or <code>grid[100][100]</code> when the
+            grid is 3×3 will crash your program!
+          </p>
+        </div>
+
+        <h2>The Level-by-Level Trick</h2>
+        <p>
+          This is the most important part to understand! How do we process one
+          "level" at a time?
+        </p>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>The Secret: Snapshot the Queue Size</h3>
+            <pre style="background: #2d2d2d; color: #a5d6a7">
+while queue and fresh > 0:
+    level_size = len(queue)  # <-- CRITICAL LINE!
+    minutes += 1
+    
+    for i in range(level_size):  # Only process THIS level
+        current = queue.popleft()
+        # ... add neighbors to queue ...</pre
+            >
+
+            <p style="margin-top: 20px"><strong>Why this works:</strong></p>
+            <ul style="margin-left: 25px; line-height: 2">
+              <li>
+                At the start of the loop, the queue contains ONLY cells from the
+                current level
+              </li>
+              <li>We record how many that is: <code>level_size</code></li>
+              <li>We process EXACTLY that many cells</li>
+              <li>
+                Any new cells added go to the BACK and belong to the NEXT level
+              </li>
+              <li>
+                After processing all <code>level_size</code> cells, one "minute"
+                has passed!
+              </li>
+            </ul>
+          </div>
+
+          <div class="time-step">
+            <h3>Example: Watch the Queue</h3>
+            <p>
+              <strong>Initial:</strong> queue = <code>[(0,0)]</code>, level_size
+              = 1
+            </p>
+            <p style="margin-top: 10px">
+              Process (0,0), add (0,1) and (1,0) to queue
+            </p>
+            <p>
+              <strong>After level 1:</strong> queue =
+              <code>[(0,1), (1,0)]</code> ← These are for NEXT minute
+            </p>
+            <p style="margin-top: 10px">
+              <strong>Next iteration:</strong> level_size = 2 (snapshot!)
+            </p>
+            <p>Process (0,1), add its neighbors</p>
+            <p>Process (1,0), add its neighbors</p>
+            <p>
+              <strong>After level 2:</strong> queue =
+              <code>[...newly added cells...]</code> ← Next minute's work
+            </p>
+          </div>
+        </div>
+
+        <h2>Multi-Source BFS: The Power Move</h2>
+
+        <div class="concept-box">
+          <h3>What Makes This Problem Special</h3>
+          <p>
+            Most BFS problems start from ONE point. This one starts from
+            MULTIPLE points (all rotten oranges)!
+          </p>
+
+          <p style="margin-top: 15px"><strong>Regular BFS:</strong></p>
+          <pre style="background: #2d2d2d; color: #a5d6a7">
+queue = deque([starting_point])  # One source</pre
+          >
+
+          <p style="margin-top: 15px"><strong>Multi-Source BFS:</strong></p>
+          <pre style="background: #2d2d2d; color: #a5d6a7">
+queue = deque()
+for all cells:
+    if cell is rotten:
+        queue.append(cell)  # Multiple sources!</pre
+          >
+
+          <p style="margin-top: 15px">
+            <strong>Why this is genius:</strong> All starting rotten oranges
+            spread simultaneously in minute 1! By adding them all to the queue
+            initially, BFS naturally handles the simultaneous spread.
+          </p>
+        </div>
+
+        <h2>Space Optimization: Modify in Place</h2>
+
+        <div class="concept-box">
+          <p>
+            <strong>Question:</strong> Do we need a separate
+            <code>visited</code> array?
+          </p>
+          <p><strong>Answer:</strong> No! We can modify the grid directly.</p>
+
+          <pre style="background: #2d2d2d; color: #a5d6a7; margin-top: 15px">
+# When we make an orange rotten:
+grid[row][col] = 2
+
+# Since it's now 2 (rotten), our condition:
+if grid[row][col] == 1:  # Will be False!
+    # So we won't process it again</pre
+          >
+
+          <p style="margin-top: 15px">
+            <strong>Benefit:</strong> Saves O(rows × cols) extra space!
+          </p>
+          <p>
+            <strong>Trade-off:</strong> We modify the input (usually okay in
+            interviews, but ask!)
+          </p>
+        </div>
+
+        <h2>Complete Algorithm Summary</h2>
+
+        <div class="critical-box">
+          <pre style="background: #2d2d2d; color: #a5d6a7">
+def orangesRotting(grid):
+    # 1. Setup
+    rows, cols = len(grid), len(grid[0])
+    queue = deque()
+    fresh = 0
+    
+    # 2. Initial scan
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 1:
+                fresh += 1
+            elif grid[r][c] == 2:
+                queue.append((r, c))
+    
+    # 3. Edge case
+    if fresh == 0:
+        return 0
+    
+    # 4. BFS simulation
+    minutes = 0
+    directions = [(-1,0), (1,0), (0,-1), (0,1)]
+    
+    while queue and fresh > 0:
+        level_size = len(queue)
+        minutes += 1
+        
+        for _ in range(level_size):
+            r, c = queue.popleft()
+            
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                
+                if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                    grid[nr][nc] = 2
+                    fresh -= 1
+                    queue.append((nr, nc))
+    
+    # 5. Result
+    return minutes if fresh == 0 else -1</pre
+          >
+        </div>
+
+        <h2>Key Insights to Remember</h2>
+
+        <div class="insight-box">
+          <p>
+            ✅ Scan grid ONCE to find starting points and count fresh oranges
+          </p>
+          <p>✅ Use queue for BFS (deque for O(1) operations)</p>
+          <p>✅ Process level-by-level using level_size snapshot</p>
+          <p>✅ Check boundaries before accessing cells</p>
+          <p>✅ Modify grid in-place to track visited cells</p>
+          <p>✅ Return -1 if fresh count > 0 after BFS completes</p>
+        </div>
+
+        <div class="next-section">
+          <p>
+            Now let's see this strategy in action with a detailed visual
+            walkthrough!
+          </p>
+          <a href="page4-visualization.html" class="big-btn"
+            >Continue to Visualization →</a
+          >
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 6: Edge Cases & Testing</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="page5-code.html">← Previous</a>
+      <span class="nav-title">Page 6: Edge Cases & Testing</span>
+      <a href="index.html" class="next-btn">🏠 Home</a>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>🔍 Edge Cases & Testing Strategies</h1>
+        <p class="subtitle">
+          Every tricky scenario and how our solution handles it
+        </p>
+      </header>
+
+      <section class="content-section">
+        <h2>Why Edge Cases Matter</h2>
+        <p>
+          Edge cases are the sneaky inputs that break poorly designed
+          algorithms. Testing them proves your solution is robust!
+        </p>
+
+        <h2>Edge Case 1: No Fresh Oranges</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario: Grid with only rotten/empty</h3>
+            <pre>
+grid = [[2, 2],
+        [2, 2]]</pre
+            >
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+              </div>
+            </div>
+            <p><strong>Expected Output:</strong> <code>0</code></p>
+            <p>
+              <strong>Why:</strong> No fresh oranges to rot! Job is already
+              done.
+            </p>
+            <p><strong>How our code handles it:</strong></p>
+            <pre>
+if fresh == 0:
+    return 0  # <-- This line catches it!</pre
+            >
+          </div>
+        </div>
+
+        <h2>Edge Case 2: Isolated Fresh Orange</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario: Fresh orange surrounded by empty cells</h3>
+            <pre>
+grid = [[2, 1, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 1],
+        [0, 0, 0, 0]]</pre
+            >
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell fresh" style="border: 3px solid red">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+              </div>
+            </div>
+            <p><strong>Expected Output:</strong> <code>-1</code></p>
+            <p>
+              <strong>Why:</strong> The orange at (2,3) is completely isolated
+              and can never be reached.
+            </p>
+            <p><strong>How our code handles it:</strong></p>
+            <pre>
+return minutes if fresh == 0 else -1
+# After BFS, fresh > 0, so returns -1</pre
+            >
+          </div>
+        </div>
+
+        <h2>Edge Case 3: All Fresh Oranges (No Rot Source)</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario: No rotten oranges to start</h3>
+            <pre>
+grid = [[1, 1],
+        [1, 1]]</pre
+            >
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p><strong>Expected Output:</strong> <code>-1</code></p>
+            <p>
+              <strong>Why:</strong> With no rotten oranges, there's no source of
+              infection!
+            </p>
+            <p><strong>How our code handles it:</strong></p>
+            <pre>
+# Queue remains empty after initial scan
+# while queue and fresh > 0:  <-- Never enters loop
+# fresh is still > 0
+return -1</pre
+            >
+          </div>
+        </div>
+
+        <h2>Edge Case 4: Single Cell Grid</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario A: Single rotten</h3>
+            <pre>grid = [[2]]</pre>
+            <p>
+              <strong>Expected Output:</strong> <code>0</code> (no fresh
+              oranges)
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Scenario B: Single fresh</h3>
+            <pre>grid = [[1]]</pre>
+            <p>
+              <strong>Expected Output:</strong> <code>-1</code> (no rot source)
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Scenario C: Single empty</h3>
+            <pre>grid = [[0]]</pre>
+            <p>
+              <strong>Expected Output:</strong> <code>0</code> (no fresh
+              oranges)
+            </p>
+          </div>
+        </div>
+
+        <h2>Edge Case 5: Multiple Rotten Sources</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario: Rot spreading from opposite corners</h3>
+            <pre>
+grid = [[2, 1, 1, 2],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [2, 1, 1, 2]]</pre
+            >
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell rotten">2</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell rotten">2</span>
+              </div>
+            </div>
+            <p><strong>Expected Output:</strong> <code>2</code></p>
+            <p>
+              <strong>Why:</strong> Four rotten sources spread simultaneously.
+              The middle oranges get infected from multiple directions, but time
+              is determined by the FIRST infection that reaches them.
+            </p>
+            <p>
+              <strong>Key insight:</strong> Multi-source BFS naturally handles
+              this! All 4 sources start at minute 0.
+            </p>
+          </div>
+        </div>
+
+        <h2>Edge Case 6: Empty Grid (All Zeros)</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario: Nothing but empty cells</h3>
+            <pre>
+grid = [[0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]]</pre
+            >
+            <p><strong>Expected Output:</strong> <code>0</code></p>
+            <p><strong>Why:</strong> No fresh oranges means nothing to rot!</p>
+            <p>
+              <strong>Caught by:</strong> <code>if fresh == 0: return 0</code>
+            </p>
+          </div>
+        </div>
+
+        <h2>Edge Case 7: Long Chain</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario: Linear spread</h3>
+            <pre>grid = [[2, 1, 1, 1, 1, 1]]</pre>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p><strong>Expected Output:</strong> <code>5</code></p>
+            <p>
+              <strong>Why:</strong> Rot spreads one cell per minute: minute 1 →
+              (0,1), minute 2 → (0,2), ..., minute 5 → (0,5)
+            </p>
+            <p>
+              <strong>Tests:</strong> Ensures level-by-level processing works
+              correctly
+            </p>
+          </div>
+        </div>
+
+        <h2>Edge Case 8: Complex Maze</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario: Empty cells blocking paths</h3>
+            <pre>
+grid = [[2, 1, 0, 1],
+        [1, 0, 0, 1],
+        [0, 0, 0, 1],
+        [1, 1, 1, 1]]</pre
+            >
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell fresh">1</span>
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p><strong>Expected Output:</strong> <code>-1</code></p>
+            <p>
+              <strong>Why:</strong> The right column and bottom row oranges are
+              separated by empty cells!
+            </p>
+          </div>
+        </div>
+
+        <h2>Testing Strategy: Checklist</h2>
+
+        <div class="concept-box">
+          <p><strong>Always test these scenarios:</strong></p>
+          <ul style="margin-left: 25px; line-height: 2">
+            <li>✓ No fresh oranges (expect 0)</li>
+            <li>✓ No rotten oranges (expect -1)</li>
+            <li>✓ Isolated fresh oranges (expect -1)</li>
+            <li>✓ Single cell grid (all three types)</li>
+            <li>✓ Multiple rotten sources</li>
+            <li>✓ Linear chain (test max distance)</li>
+            <li>✓ All cells same value (0, 1, or 2)</li>
+            <li>✓ Complex maze with obstacles</li>
+          </ul>
+        </div>
+
+        <h2>Common Bugs to Avoid</h2>
+
+        <div class="critical-box">
+          <h3>❌ Bug #1: Incrementing minutes wrong</h3>
+          <pre>
+# WRONG:
+for _ in range(level_size):
+    r, c = queue.popleft()
+    minutes += 1  # NO! This counts cells, not levels</pre
+          >
+          <pre>
+# RIGHT:
+minutes += 1  # Once per level
+for _ in range(level_size):
+    r, c = queue.popleft()</pre
+          >
+        </div>
+
+        <div class="critical-box">
+          <h3>❌ Bug #2: Not checking all rotten sources</h3>
+          <pre>
+# WRONG:
+for r in range(rows):
+    for c in range(cols):
+        if grid[r][c] == 2:
+            queue.append((r, c))
+            break  # NO! Only gets first rotten orange!</pre
+          >
+          <pre>
+# RIGHT:
+for r in range(rows):
+    for c in range(cols):
+        if grid[r][c] == 2:
+            queue.append((r, c))  # Get ALL of them</pre
+          >
+        </div>
+
+        <div class="critical-box">
+          <h3>❌ Bug #3: Forgetting boundary checks</h3>
+          <pre>
+# WRONG:
+if grid[nr][nc] == 1:  # Crashes if nr or nc out of bounds!</pre
+          >
+          <pre>
+# RIGHT:
+if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:</pre
+          >
+        </div>
+
+        <h2>Manual Testing Template</h2>
+
+        <div class="concept-box">
+          <pre>
+def test_oranges_rotting():
+    solution = Solution()
+    
+    # Test 1: Normal case
+    grid1 = [[2,1,1],[1,1,0],[0,1,1]]
+    assert solution.orangesRotting(grid1) == 4
+    
+    # Test 2: Impossible
+    grid2 = [[2,1,1],[0,1,1],[1,0,1]]
+    assert solution.orangesRotting(grid2) == -1
+    
+    # Test 3: No fresh
+    grid3 = [[2,2],[2,2]]
+    assert solution.orangesRotting(grid3) == 0
+    
+    # Test 4: No rotten
+    grid4 = [[1,1],[1,1]]
+    assert solution.orangesRotting(grid4) == -1
+    
+    # Test 5: Single cell
+    assert solution.orangesRotting([[2]]) == 0
+    assert solution.orangesRotting([[1]]) == -1
+    assert solution.orangesRotting([[0]]) == 0
+    
+    print("All tests passed! ✅")
+
+test_oranges_rotting()</pre
+          >
+        </div>
+
+        <div class="next-section">
+          <p>
+            🎉 Congratulations! You've mastered the Rotting Oranges problem!
+          </p>
+          <a href="index.html" class="big-btn">← Back to Home</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

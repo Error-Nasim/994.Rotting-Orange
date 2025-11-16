@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 1: Understanding the Problem</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="index.html">🏠 Home</a>
+      <span class="nav-title">Page 1: Understanding the Problem</span>
+      <a href="page2-bfs-concept.html" class="next-btn">Next: BFS Concept →</a>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>🍊 Understanding the Rotting Oranges Problem</h1>
+        <p class="subtitle">
+          Let's break down EXACTLY what we're trying to solve
+        </p>
+      </header>
+
+      <section class="content-section">
+        <h2>The Story: A Warehouse Full of Oranges</h2>
+        <p>
+          Imagine you work at a fruit warehouse. Your oranges are stored in a
+          rectangular grid (like a shelf with rows and columns). Every cell in
+          this grid can be:
+        </p>
+
+        <div class="concept-box">
+          <div class="grid-demo">
+            <div class="cell-explanation">
+              <span class="cell empty">0</span>
+              <div>
+                <strong>Empty Cell</strong>
+                <p>
+                  No orange here. Maybe it's empty space or a blocked section.
+                </p>
+              </div>
+            </div>
+            <div class="cell-explanation">
+              <span class="cell fresh">1</span>
+              <div>
+                <strong>Fresh Orange</strong>
+                <p>A perfectly good, healthy orange ready to sell.</p>
+              </div>
+            </div>
+            <div class="cell-explanation">
+              <span class="cell rotten">2</span>
+              <div>
+                <strong>Rotten Orange</strong>
+                <p>
+                  This orange has gone bad and will spread rot to its neighbors.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2>The Problem: Rot Spreads Like Disease</h2>
+        <p>Here's the critical rule that drives this entire problem:</p>
+
+        <div class="critical-box">
+          <strong
+            >🚨 Every minute, a rotten orange will infect all FRESH oranges
+            directly adjacent to it.</strong
+          >
+          <p style="margin-top: 10px">
+            "Adjacent" means up, down, left, or right (NOT diagonally).
+          </p>
+        </div>
+
+        <h2>Let's See It Happen</h2>
+        <p>Imagine this starting grid:</p>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Minute 0 (Initial State)</h3>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p class="explanation">
+              We start with 1 rotten orange at position (0,0) and 7 fresh
+              oranges scattered around.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Minute 1</h3>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten highlight">2</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell rotten highlight">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p class="explanation">
+              The original rotten orange (0,0) infects its neighbors: right
+              (0,1) and down (1,0). They become rotten NOW.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Minute 2</h3>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+                <span class="cell rotten highlight">2</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten highlight">2</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p class="explanation">
+              Now the oranges that became rotten in minute 1 spread to THEIR
+              neighbors. The rot is expanding like a wave!
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Minute 3</h3>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell rotten highlight">2</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p class="explanation">
+              The wave continues spreading. Notice (2,1) just got infected from
+              (1,1).
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Minute 4 (Final)</h3>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell rotten">2</span>
+                <span class="cell rotten highlight">2</span>
+              </div>
+            </div>
+            <p class="explanation">
+              ✅ ALL fresh oranges are now rotten! The answer is
+              <strong>4 minutes</strong>.
+            </p>
+          </div>
+        </div>
+
+        <h2>What Are We Asked to Find?</h2>
+        <div class="question-box">
+          <p>
+            <strong>Question:</strong> Given a grid, return the MINIMUM number
+            of minutes until NO fresh oranges remain.
+          </p>
+          <p style="margin-top: 15px">
+            <strong>Special Case:</strong> If it's IMPOSSIBLE for all oranges to
+            rot (e.g., a fresh orange is completely isolated), return
+            <strong>-1</strong>.
+          </p>
+        </div>
+
+        <h2>Example Inputs & Outputs</h2>
+
+        <div class="example-box">
+          <h3>Example 1: Normal Case</h3>
+          <p><strong>Input:</strong></p>
+          <pre>
+grid = [[2,1,1],
+        [1,1,0],
+        [0,1,1]]</pre
+          >
+          <p><strong>Output:</strong> <code>4</code></p>
+          <p>
+            <strong>Why?</strong> As we saw above, it takes 4 minutes for all
+            oranges to rot.
+          </p>
+        </div>
+
+        <div class="example-box">
+          <h3>Example 2: Isolated Orange</h3>
+          <p><strong>Input:</strong></p>
+          <pre>
+grid = [[2,1,1],
+        [0,1,1],
+        [1,0,1]]</pre
+          >
+          <p><strong>Output:</strong> <code>-1</code></p>
+          <p>
+            <strong>Why?</strong> Look at position (2,0) - that fresh orange is
+            surrounded by empty cells and can NEVER be reached by rot!
+          </p>
+          <div class="grid-display">
+            <div class="grid-row">
+              <span class="cell rotten">2</span>
+              <span class="cell fresh">1</span>
+              <span class="cell fresh">1</span>
+            </div>
+            <div class="grid-row">
+              <span class="cell empty">0</span>
+              <span class="cell fresh">1</span>
+              <span class="cell fresh">1</span>
+            </div>
+            <div class="grid-row">
+              <span class="cell fresh" style="border: 3px solid red">1</span>
+              <span class="cell empty">0</span>
+              <span class="cell fresh">1</span>
+            </div>
+          </div>
+          <p style="margin-top: 10px">The orange in red is trapped!</p>
+        </div>
+
+        <div class="example-box">
+          <h3>Example 3: No Fresh Oranges</h3>
+          <p><strong>Input:</strong></p>
+          <pre>
+grid = [[2,2],
+        [2,2]]</pre
+          >
+          <p><strong>Output:</strong> <code>0</code></p>
+          <p>
+            <strong>Why?</strong> All oranges are already rotten! It takes 0
+            minutes.
+          </p>
+        </div>
+
+        <h2>Key Insights Before Moving On</h2>
+        <div class="insight-box">
+          <p>
+            ✅ Rot spreads <strong>simultaneously</strong> from all rotten
+            oranges at once (not one at a time)
+          </p>
+          <p>✅ Rot spreads in 4 directions only: up, down, left, right</p>
+          <p>✅ We need to track TIME (minutes) as the spread happens</p>
+          <p>✅ Some oranges might be unreachable → return -1</p>
+        </div>
+
+        <div class="next-section">
+          <p>
+            Now that you understand WHAT we're solving, let's learn WHY BFS is
+            the perfect tool for this job!
+          </p>
+          <a href="page2-bfs-concept.html" class="big-btn"
+            >Continue to BFS Concept →</a
+          >
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 4: Interactive Visualization</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .controls {
+        text-align: center;
+        margin: 30px 0;
+      }
+      .controls button {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        margin: 10px;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .controls button:hover {
+        background: #764ba2;
+        transform: scale(1.05);
+      }
+      .controls button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+      #status {
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #667eea;
+        margin: 20px 0;
+        min-height: 30px;
+      }
+      #interactive-grid {
+        display: inline-block;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .grid-container {
+        text-align: center;
+        margin: 30px 0;
+      }
+      .queue-display {
+        background: #f0f4ff;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        border-left: 5px solid #667eea;
+      }
+      .queue-display h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+      .queue-content {
+        font-family: "Courier New", monospace;
+        background: #2d2d2d;
+        color: #a5d6a7;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="page3-approach.html">← Previous</a>
+      <span class="nav-title">Page 4: Interactive Visualization</span>
+      <a href="page5-code.html" class="next-btn">Next: Python Code →</a>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>🎬 Watch the Algorithm in Action</h1>
+        <p class="subtitle">
+          Interactive step-by-step simulation with detailed explanations
+        </p>
+      </header>
+
+      <section class="content-section">
+        <h2>Interactive Demo</h2>
+        <p>
+          Click cells to change their state, then watch the algorithm work
+          step-by-step!
+        </p>
+
+        <div class="concept-box">
+          <p><strong>Controls:</strong></p>
+          <ul style="margin-left: 25px; line-height: 2">
+            <li>
+              Click a cell to cycle: Empty (0) → Fresh (1) → Rotten (2) → Empty
+            </li>
+            <li>Click "Run Algorithm" to see the BFS simulation</li>
+            <li>
+              Watch the queue, fresh count, and minutes update in real-time
+            </li>
+          </ul>
+        </div>
+
+        <div class="grid-container">
+          <div id="interactive-grid"></div>
+        </div>
+
+        <div class="controls">
+          <button id="run-btn">▶️ Run Algorithm</button>
+          <button id="step-btn">⏭️ Step Forward</button>
+          <button id="reset-btn">🔄 Reset</button>
+          <button id="preset1-btn">Example 1</button>
+          <button id="preset2-btn">Example 2 (Isolated)</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="queue-display">
+          <h3>Current State</h3>
+          <div id="state-info"></div>
+        </div>
+
+        <div class="queue-display">
+          <h3>Step-by-Step Explanation</h3>
+          <div id="explanation"></div>
+        </div>
+
+        <h2>What You're Watching</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>🟢 Fresh Oranges (Green)</h3>
+            <p>
+              These are healthy oranges waiting to be processed. When rot
+              reaches them, they turn red.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>🔴 Rotten Oranges (Red)</h3>
+            <p>
+              These spread rot to adjacent fresh oranges every minute.
+              Highlighted cells show newly rotten oranges.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>⚪ Empty Cells (Gray)</h3>
+            <p>No orange here - rot can't spread through empty cells!</p>
+          </div>
+        </div>
+
+        <h2>Understanding the Queue</h2>
+        <p>
+          The queue shows you which cells are being processed and in what order:
+        </p>
+
+        <div class="concept-box">
+          <p>
+            <strong>Minute 0:</strong> Queue starts with ALL initially rotten
+            oranges
+          </p>
+          <p>
+            <strong>Minute 1:</strong> Queue contains all oranges infected in
+            minute 1
+          </p>
+          <p>
+            <strong>Minute 2:</strong> Queue contains all oranges infected in
+            minute 2
+          </p>
+          <p><strong>And so on...</strong></p>
+
+          <p style="margin-top: 15px">
+            <strong>When the queue becomes empty:</strong>
+          </p>
+          <ul style="margin-left: 25px">
+            <li>If fresh count = 0 → Success! Return the minutes</li>
+            <li>If fresh count > 0 → Some oranges are isolated, return -1</li>
+          </ul>
+        </div>
+
+        <h2>Try These Scenarios</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Scenario 1: Normal Spread</h3>
+            <p>
+              Start with one rotten orange in the corner. Watch it spread across
+              the grid.
+            </p>
+            <p><strong>Expected:</strong> All oranges should eventually rot</p>
+          </div>
+
+          <div class="time-step">
+            <h3>Scenario 2: Isolated Orange</h3>
+            <p>
+              Place empty cells around one fresh orange so rot can't reach it.
+            </p>
+            <p><strong>Expected:</strong> Algorithm returns -1 (impossible)</p>
+          </div>
+
+          <div class="time-step">
+            <h3>Scenario 3: Multiple Starting Points</h3>
+            <p>
+              Start with 2+ rotten oranges in different locations. Watch them
+              spread simultaneously!
+            </p>
+            <p>
+              <strong>Expected:</strong> Faster completion time due to multiple
+              sources
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>Scenario 4: Already Complete</h3>
+            <p>Make all oranges rotten (no fresh ones).</p>
+            <p>
+              <strong>Expected:</strong> Return 0 immediately (no work needed!)
+            </p>
+          </div>
+        </div>
+
+        <div class="next-section">
+          <p>
+            Ready to see the actual Python code that makes this magic happen?
+          </p>
+          <a href="page5-code.html" class="big-btn"
+            >Continue to Python Code →</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const GRID_SIZE = 4;
+      let grid = [];
+      let isRunning = false;
+      let stepMode = false;
+
+      const EMPTY = 0,
+        FRESH = 1,
+        ROTTEN = 2;
+
+      function initGrid() {
+        grid = [
+          [2, 1, 1, 0],
+          [1, 1, 0, 1],
+          [0, 1, 1, 1],
+          [1, 0, 1, 2],
+        ];
+        renderGrid();
+        updateState();
+      }
+
+      function renderGrid() {
+        const container = document.getElementById("interactive-grid");
+        container.innerHTML = "";
+
+        for (let i = 0; i < GRID_SIZE; i++) {
+          const row = document.createElement("div");
+          row.className = "grid-row";
+          for (let j = 0; j < GRID_SIZE; j++) {
+            const cell = document.createElement("span");
+            cell.className = "cell";
+            cell.textContent = grid[i][j];
+
+            if (grid[i][j] === EMPTY) cell.classList.add("empty");
+            else if (grid[i][j] === FRESH) cell.classList.add("fresh");
+            else if (grid[i][j] === ROTTEN) cell.classList.add("rotten");
+
+            if (!isRunning) {
+              cell.style.cursor = "pointer";
+              cell.onclick = () => toggleCell(i, j);
+            }
+
+            row.appendChild(cell);
+          }
+          container.appendChild(row);
+        }
+      }
+
+      function toggleCell(i, j) {
+        if (isRunning) return;
+        grid[i][j] = (grid[i][j] + 1) % 3;
+        renderGrid();
+        updateState();
+      }
+
+      function updateState() {
+        let fresh = 0;
+        let rotten = 0;
+        for (let i = 0; i < GRID_SIZE; i++) {
+          for (let j = 0; j < GRID_SIZE; j++) {
+            if (grid[i][j] === FRESH) fresh++;
+            if (grid[i][j] === ROTTEN) rotten++;
+          }
+        }
+
+        document.getElementById("state-info").innerHTML = `
+        <div class="queue-content">
+Fresh oranges: ${fresh}<br>
+Rotten oranges: ${rotten}<br>
+Empty cells: ${GRID_SIZE * GRID_SIZE - fresh - rotten}
+        </div>
+      `;
+
+        document.getElementById("explanation").innerHTML = `
+        <div class="queue-content">
+Click "Run Algorithm" to start the simulation!<br>
+Or modify the grid by clicking cells.
+        </div>
+      `;
+      }
+
+      async function runAlgorithm() {
+        isRunning = true;
+        document.getElementById("run-btn").disabled = true;
+        document.getElementById("step-btn").disabled = true;
+
+        const workGrid = grid.map((row) => [...row]);
+        let fresh = 0;
+        const queue = [];
+
+        // Initialize
+        for (let i = 0; i < GRID_SIZE; i++) {
+          for (let j = 0; j < GRID_SIZE; j++) {
+            if (workGrid[i][j] === FRESH) fresh++;
+            if (workGrid[i][j] === ROTTEN) queue.push([i, j]);
+          }
+        }
+
+        document.getElementById("explanation").innerHTML = `
+        <div class="queue-content">
+STEP 1: Initial scan complete<br>
+Found ${fresh} fresh oranges<br>
+Found ${queue.length} rotten oranges (starting points)<br>
+Queue: [${queue.map(([r, c]) => `(${r},${c})`).join(", ")}]
+        </div>
+      `;
+
+        if (fresh === 0) {
+          document.getElementById("status").textContent =
+            "✅ Result: 0 minutes (no fresh oranges!)";
+          document.getElementById("explanation").innerHTML += `
+          <div class="queue-content" style="margin-top: 10px;">
+DONE! No fresh oranges to rot.<br>
+Answer: 0
+          </div>
+        `;
+          isRunning = false;
+          document.getElementById("run-btn").disabled = false;
+          return;
+        }
+
+        await sleep(1500);
+
+        let minutes = 0;
+        const directions = [
+          [-1, 0],
+          [1, 0],
+          [0, -1],
+          [0, 1],
+        ];
+
+        while (queue.length > 0 && fresh > 0) {
+          const levelSize = queue.length;
+          minutes++;
+
+          document.getElementById(
+            "status"
+          ).textContent = `⏱️ Minute ${minutes} - Processing ${levelSize} cells`;
+          document.getElementById("explanation").innerHTML = `
+          <div class="queue-content">
+MINUTE ${minutes}<br>
+Level size: ${levelSize}<br>
+Queue before: [${queue
+            .slice(0, 10)
+            .map(([r, c]) => `(${r},${c})`)
+            .join(", ")}${queue.length > 10 ? "..." : ""}]<br>
+Fresh remaining: ${fresh}
+          </div>
+        `;
+
+          const newlyRotten = [];
+
+          for (let i = 0; i < levelSize; i++) {
+            const [r, c] = queue.shift();
+
+            for (const [dr, dc] of directions) {
+              const nr = r + dr;
+              const nc = c + dc;
+
+              if (
+                nr >= 0 &&
+                nr < GRID_SIZE &&
+                nc >= 0 &&
+                nc < GRID_SIZE &&
+                workGrid[nr][nc] === FRESH
+              ) {
+                workGrid[nr][nc] = ROTTEN;
+                fresh--;
+                queue.push([nr, nc]);
+                newlyRotten.push([nr, nc]);
+              }
+            }
+          }
+
+          grid = workGrid.map((row) => [...row]);
+          renderGrid();
+
+          document.getElementById("explanation").innerHTML += `
+          <div class="queue-content" style="margin-top: 10px;">
+Newly infected: [${newlyRotten.map(([r, c]) => `(${r},${c})`).join(", ")}]<br>
+Fresh remaining: ${fresh}<br>
+Queue after: [${queue
+            .slice(0, 10)
+            .map(([r, c]) => `(${r},${c})`)
+            .join(", ")}${queue.length > 10 ? "..." : ""}]
+          </div>
+        `;
+
+          await sleep(1500);
+        }
+
+        const result = fresh === 0 ? minutes : -1;
+
+        if (result === -1) {
+          document.getElementById("status").textContent =
+            "❌ Result: -1 (some oranges are isolated!)";
+          document.getElementById("explanation").innerHTML += `
+          <div class="queue-content" style="margin-top: 10px; background: #ffebee; color: #c62828;">
+FAILED! Queue is empty but ${fresh} fresh oranges remain.<br>
+These oranges are ISOLATED and cannot be reached.<br>
+Answer: -1
+          </div>
+        `;
+        } else {
+          document.getElementById(
+            "status"
+          ).textContent = `✅ Result: ${result} minutes`;
+          document.getElementById("explanation").innerHTML += `
+          <div class="queue-content" style="margin-top: 10px; background: #e8f5e9; color: #2e7d32;">
+SUCCESS! All fresh oranges are now rotten.<br>
+Total time: ${result} minute${result !== 1 ? "s" : ""}<br>
+Answer: ${result}
+          </div>
+        `;
+        }
+
+        isRunning = false;
+        document.getElementById("run-btn").disabled = false;
+        document.getElementById("step-btn").disabled = false;
+      }
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      function setPreset1() {
+        grid = [
+          [2, 1, 1, 0],
+          [1, 1, 0, 0],
+          [0, 1, 1, 0],
+          [0, 0, 1, 1],
+        ];
+        renderGrid();
+        updateState();
+      }
+
+      function setPreset2() {
+        grid = [
+          [2, 1, 1, 0],
+          [0, 1, 1, 0],
+          [1, 0, 0, 0],
+          [0, 0, 0, 0],
+        ];
+        renderGrid();
+        updateState();
+        document.getElementById("explanation").innerHTML = `
+        <div class="queue-content">
+PRESET: Isolated Orange Scenario<br>
+Notice the fresh orange at position (2,0) is surrounded by empty cells!<br>
+It CANNOT be reached by rot from (0,0).<br>
+Expected result: -1
+        </div>
+      `;
+      }
+
+      document.getElementById("run-btn").onclick = runAlgorithm;
+      document.getElementById("reset-btn").onclick = initGrid;
+      document.getElementById("preset1-btn").onclick = setPreset1;
+      document.getElementById("preset2-btn").onclick = setPreset2;
+
+      initGrid();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rotting Oranges Tutorial - Home</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .container {
+        max-width: 1000px;
+        background: white;
+        border-radius: 20px;
+        padding: 50px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        color: #667eea;
+        font-size: 3rem;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 1.2rem;
+        margin-bottom: 50px;
+      }
+      .nav-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+      }
+      .nav-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-decoration: none;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+      }
+      .nav-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      }
+      .nav-card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+      .nav-card p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+      }
+      .nav-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        opacity: 0.3;
+        margin-bottom: 10px;
+      }
+      .intro {
+        background: #f0f4ff;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        border-left: 5px solid #667eea;
+      }
+      .intro h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🍊 Rotting Oranges</h1>
+      <p class="subtitle">A Complete Step-by-Step Tutorial with Python</p>
+
+      <div class="intro">
+        <h3>Welcome to the Ultimate Guide!</h3>
+        <p>
+          This tutorial breaks down the Rotting Oranges problem into digestible
+          parts. Each page focuses on ONE concept, explained in crystal-clear
+          detail with Python examples, visualizations, and interactive demos.
+        </p>
+        <p style="margin-top: 10px">
+          <strong
+            >Start with Page 1 and work your way through sequentially.</strong
+          >
+          Each page builds on the previous one!
+        </p>
+      </div>
+
+      <div class="nav-grid">
+        <a href="page1-problem.html" class="nav-card">
+          <div class="nav-number">01</div>
+          <h2>Understanding the Problem</h2>
+          <p>
+            What are we solving? Real-world examples, grid basics, and the core
+            challenge explained simply.
+          </p>
+        </a>
+
+        <a href="page2-bfs-concept.html" class="nav-card">
+          <div class="nav-number">02</div>
+          <h2>What is BFS?</h2>
+          <p>
+            Breadth-First Search explained from scratch. Wave propagation,
+            level-by-level thinking, and why it matters here.
+          </p>
+        </a>
+
+        <a href="page3-approach.html" class="nav-card">
+          <div class="nav-number">03</div>
+          <h2>The Solution Strategy</h2>
+          <p>
+            Breaking down the algorithm step-by-step. Understanding multi-source
+            BFS and the game plan.
+          </p>
+        </a>
+
+        <a href="page4-visualization.html" class="nav-card">
+          <div class="nav-number">04</div>
+          <h2>Visual Walkthrough</h2>
+          <p>
+            See the algorithm in action! Interactive grid showing
+            minute-by-minute rot spreading with detailed explanations.
+          </p>
+        </a>
+
+        <a href="page5-code.html" class="nav-card">
+          <div class="nav-number">05</div>
+          <h2>Python Implementation</h2>
+          <p>
+            Line-by-line code explanation. Every variable, every loop, every
+            decision explained in plain English.
+          </p>
+        </a>
+
+        <a href="page6-edgecases.html" class="nav-card">
+          <div class="nav-number">06</div>
+          <h2>Edge Cases & Testing</h2>
+          <p>
+            What can go wrong? Handling tricky scenarios, isolated oranges,
+            empty grids, and validation strategies.
+          </p>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

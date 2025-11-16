@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 2: What is BFS?</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="page1-problem.html">← Previous</a>
+      <span class="nav-title">Page 2: What is BFS?</span>
+      <a href="page3-approach.html" class="next-btn"
+        >Next: Solution Strategy →</a
+      >
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>🌊 Understanding BFS (Breadth-First Search)</h1>
+        <p class="subtitle">
+          The secret weapon for solving "spreading" problems
+        </p>
+      </header>
+
+      <section class="content-section">
+        <h2>What Does "Breadth-First" Even Mean?</h2>
+        <p>Imagine you drop a pebble in a still pond. What happens?</p>
+
+        <div class="concept-box">
+          <p>
+            💧 A ripple forms and expands outward in
+            <strong>circles</strong> (or waves)
+          </p>
+          <p>💧 The wave closest to the pebble moves first</p>
+          <p>💧 Then the next wave, then the next, and so on...</p>
+          <p>
+            💧 All points on the SAME wave are the SAME distance from the center
+          </p>
+        </div>
+
+        <p>
+          <strong>BFS works exactly like this!</strong> Instead of exploring
+          randomly, it explores in "layers" or "levels" - like ripples spreading
+          outward.
+        </p>
+
+        <h2>BFS vs DFS: A Simple Analogy</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>🌳 DFS (Depth-First Search): The Deep Diver</h3>
+            <p>
+              Imagine exploring a tree by going as DEEP as possible down one
+              branch before backing up.
+            </p>
+            <pre>
+Start → Go Deep → Go Deeper → Go Deepest → Backtrack → Try Next Branch</pre
+            >
+            <p>
+              <strong>Problem for our oranges:</strong> DFS doesn't naturally
+              track "levels" or "time". It goes deep into one path before
+              exploring neighbors at the same level.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <h3>🌊 BFS (Breadth-First Search): The Level Explorer</h3>
+            <p>
+              Imagine exploring a tree by visiting ALL nodes at level 1, then
+              ALL nodes at level 2, etc.
+            </p>
+            <pre>Start → All Level 1 → All Level 2 → All Level 3 → ...</pre>
+            <p>
+              <strong>Perfect for our oranges!</strong> BFS naturally groups
+              things by "distance" or "time" from the starting point.
+            </p>
+          </div>
+        </div>
+
+        <h2>How BFS Works: Step-by-Step</h2>
+
+        <div class="concept-box">
+          <h3>The Queue: BFS's Secret Weapon</h3>
+          <p>
+            BFS uses a <strong>queue</strong> (First-In-First-Out, like a line
+            at a store):
+          </p>
+          <ol style="margin-top: 15px; margin-left: 25px">
+            <li>Start by adding all starting points to the queue</li>
+            <li>Remove the first item from the queue</li>
+            <li>Process it (mark as visited, do whatever you need)</li>
+            <li>Add all its unvisited neighbors to the BACK of the queue</li>
+            <li>Repeat until queue is empty</li>
+          </ol>
+          <p style="margin-top: 15px">
+            <strong>Why this works:</strong> Items added first are processed
+            first, ensuring we explore level-by-level!
+          </p>
+        </div>
+
+        <h2>BFS Example: Finding Friends</h2>
+        <p>
+          Imagine you want to find all people within 2 "friend connections" of
+          you on social media:
+        </p>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Level 0: You</h3>
+            <p>Start with yourself in the queue: <code>["You"]</code></p>
+          </div>
+
+          <div class="time-step">
+            <h3>Level 1: Your Direct Friends</h3>
+            <p>Process "You", add your 3 friends:</p>
+            <p>Queue: <code>["Alice", "Bob", "Charlie"]</code></p>
+            <p>These are all 1 connection away!</p>
+          </div>
+
+          <div class="time-step">
+            <h3>Level 2: Friends of Friends</h3>
+            <p>Process Alice → add her friends</p>
+            <p>Process Bob → add his friends</p>
+            <p>Process Charlie → add his friends</p>
+            <p>Queue: <code>["Dana", "Eve", "Frank", ...]</code></p>
+            <p>These are all 2 connections away!</p>
+          </div>
+        </div>
+
+        <h2>Why BFS is PERFECT for Rotting Oranges</h2>
+
+        <div class="critical-box">
+          <p>
+            <strong>Key Insight:</strong> Every "level" in BFS represents one
+            minute of time!
+          </p>
+          <ul style="margin-top: 15px; margin-left: 25px">
+            <li>Level 0 = Minute 0 (initial rotten oranges)</li>
+            <li>Level 1 = Minute 1 (oranges that rot after 1 minute)</li>
+            <li>Level 2 = Minute 2 (oranges that rot after 2 minutes)</li>
+            <li>And so on...</li>
+          </ul>
+        </div>
+
+        <h2>BFS on Our Orange Grid</h2>
+        <p>Let's trace through our example grid using BFS thinking:</p>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <h3>Step 1: Initialize Queue with ALL Rotten Oranges</h3>
+            <p>
+              This is the key! We start from MULTIPLE sources simultaneously.
+            </p>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten highlight">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p>
+              Queue: <code>[(0,0)]</code> ← This is our starting rotten orange
+            </p>
+            <p>Fresh count: 7</p>
+          </div>
+
+          <div class="time-step">
+            <h3>Step 2: Process Level 0 (Minute 0 → Minute 1)</h3>
+            <p>Process (0,0), add its fresh neighbors to queue:</p>
+            <p>
+              Check up (out of bounds), check down (1,0) = fresh!, check left
+              (out of bounds), check right (0,1) = fresh!
+            </p>
+            <p>Queue after minute 1: <code>[(0,1), (1,0)]</code></p>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten highlight">2</span>
+                <span class="cell fresh">1</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell rotten highlight">2</span>
+                <span class="cell fresh">1</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p>Fresh count: 5 (we infected 2 oranges!)</p>
+            <p><strong>Minutes elapsed: 1</strong></p>
+          </div>
+
+          <div class="time-step">
+            <h3>Step 3: Process Level 1 (Minute 1 → Minute 2)</h3>
+            <p>
+              Now process both (0,1) and (1,0) - they were infected at the same
+              time!
+            </p>
+            <p>From (0,1): infect (0,2)</p>
+            <p>From (1,0): infect (1,1)</p>
+            <p>Queue after minute 2: <code>[(0,2), (1,1)]</code></p>
+            <div class="grid-display">
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten">2</span>
+                <span class="cell rotten highlight">2</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell rotten">2</span>
+                <span class="cell rotten highlight">2</span>
+                <span class="cell empty">0</span>
+              </div>
+              <div class="grid-row">
+                <span class="cell empty">0</span>
+                <span class="cell fresh">1</span>
+                <span class="cell fresh">1</span>
+              </div>
+            </div>
+            <p>Fresh count: 3</p>
+            <p><strong>Minutes elapsed: 2</strong></p>
+          </div>
+
+          <div class="time-step">
+            <h3>Step 4: Continue Until Queue is Empty</h3>
+            <p>Keep processing level by level...</p>
+            <p>Each level = one more minute!</p>
+            <p>Stop when either:</p>
+            <ul style="margin-left: 25px">
+              <li>Fresh count = 0 (success! return minutes)</li>
+              <li>Queue empty but fresh > 0 (failure! return -1)</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>The BFS Pattern for Grid Problems</h2>
+
+        <div class="concept-box">
+          <pre style="background: #2d2d2d; color: #a5d6a7; padding: 20px">
+from collections import deque
+
+# 1. Initialize queue with starting points
+queue = deque()
+for all cells:
+    if cell is starting point:
+        queue.append(cell)
+
+# 2. BFS loop
+while queue is not empty:
+    # Process entire level (one "minute")
+    level_size = len(queue)
+    
+    for i in range(level_size):
+        current = queue.popleft()
+        
+        # Check all 4 neighbors
+        for each neighbor:
+            if neighbor is valid and unvisited:
+                mark as visited
+                queue.append(neighbor)
+    
+    # Increment time/distance
+    minutes += 1</pre
+          >
+        </div>
+
+        <h2>Key Takeaways</h2>
+
+        <div class="insight-box">
+          <p>✅ BFS explores level-by-level (like waves spreading)</p>
+          <p>✅ Perfect for "minimum time" or "shortest path" problems</p>
+          <p>✅ Uses a queue to maintain order</p>
+          <p>
+            ✅ Process ALL nodes at current level before moving to next level
+          </p>
+          <p>✅ Each level = one unit of time/distance</p>
+        </div>
+
+        <div class="next-section">
+          <p>
+            Now you understand BFS! Let's apply it to build our complete
+            solution strategy.
+          </p>
+          <a href="page3-approach.html" class="big-btn"
+            >Continue to Solution Strategy →</a
+          >
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

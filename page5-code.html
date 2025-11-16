@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 5: Python Implementation</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <a href="page4-visualization.html">← Previous</a>
+      <span class="nav-title">Page 5: Python Implementation</span>
+      <a href="page6-edgecases.html" class="next-btn">Next: Edge Cases →</a>
+    </nav>
+
+    <main>
+      <header class="page-header">
+        <h1>🐍 Python Implementation Explained</h1>
+        <p class="subtitle">
+          Line-by-line breakdown of every single piece of code
+        </p>
+      </header>
+
+      <section class="content-section">
+        <h2>The Complete Solution</h2>
+        <p>Here's the full Python code. We'll break down EVERY LINE below:</p>
+
+        <pre>
+from collections import deque
+from typing import List
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
+        
+        fresh = 0
+        queue = deque()
+        
+        # Step 1: Scan the grid
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:
+                    fresh += 1
+                elif grid[r][c] == 2:
+                    queue.append((r, c))
+        
+        # Step 2: Edge case
+        if fresh == 0:
+            return 0
+        
+        # Step 3: BFS simulation
+        minutes = 0
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        
+        while queue and fresh > 0:
+            level_size = len(queue)
+            minutes += 1
+            
+            for _ in range(level_size):
+                r, c = queue.popleft()
+                
+                for dr, dc in directions:
+                    nr, nc = r + dr, c + dc
+                    
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                        grid[nr][nc] = 2
+                        fresh -= 1
+                        queue.append((nr, nc))
+        
+        # Step 4: Return result
+        return minutes if fresh == 0 else -1</pre
+        >
+
+        <h2>Part 1: Imports and Setup</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <pre>from collections import deque</pre>
+            <p>
+              <strong>What it does:</strong> Imports the deque (double-ended
+              queue) class.
+            </p>
+            <p>
+              <strong>Why we need it:</strong> Regular Python lists are slow for
+              removing from the front (O(n)). Deque gives us O(1) popleft()
+              operations, which is crucial for efficient BFS!
+            </p>
+            <p>
+              <strong>Alternative:</strong> You could use a regular list with
+              <code>queue.pop(0)</code>, but it's much slower.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>from typing import List</pre>
+            <p><strong>What it does:</strong> Imports type hints.</p>
+            <p>
+              <strong>Why we need it:</strong> Allows us to specify that
+              <code>grid</code> is a "List of Lists of integers". This helps
+              with code documentation and IDE autocomplete.
+            </p>
+            <p>
+              <strong>Note:</strong> Optional in Python, but considered good
+              practice!
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>class Solution:</pre>
+            <p>
+              <strong>What it does:</strong> Creates a class to hold our
+              solution.
+            </p>
+            <p>
+              <strong>Why:</strong> LeetCode and similar platforms expect
+              solutions in this format.
+            </p>
+            <p>
+              <strong>Note:</strong> In a real program, you could just have a
+              standalone function!
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>def orangesRotting(self, grid: List[List[int]]) -> int:</pre>
+            <p><strong>What it does:</strong> Defines our main function.</p>
+            <p><strong>Parameters:</strong></p>
+            <ul style="margin-left: 25px">
+              <li><code>self</code> - required for class methods</li>
+              <li><code>grid</code> - 2D list of integers (our orange grid)</li>
+            </ul>
+            <p>
+              <strong>Returns:</strong> An integer (minutes, or -1 if
+              impossible)
+            </p>
+          </div>
+        </div>
+
+        <h2>Part 2: Initialize Variables</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <pre>
+rows = len(grid)
+cols = len(grid[0])</pre
+            >
+            <p>
+              <strong>What it does:</strong> Stores the dimensions of the grid.
+            </p>
+            <p>
+              <strong>Why:</strong> We'll need these values repeatedly for
+              boundary checking. Storing them once makes code cleaner and
+              slightly faster.
+            </p>
+            <p><strong>Example:</strong> If grid is 3×4, then rows=3, cols=4</p>
+            <p>
+              <strong>Note:</strong> Assumes grid has at least one row (usually
+              guaranteed by problem)
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>
+fresh = 0
+queue = deque()</pre
+            >
+            <p>
+              <strong>What it does:</strong> Creates our two main tracking
+              variables.
+            </p>
+            <p>
+              <strong>fresh:</strong> Counter for fresh oranges. Starts at 0,
+              will increment during scan.
+            </p>
+            <p>
+              <strong>queue:</strong> Empty deque that will hold positions of
+              rotten oranges.
+            </p>
+            <p>
+              <strong>Why deque():</strong> Gives us fast
+              <code>append()</code> (add to back) and
+              <code>popleft()</code> (remove from front)
+            </p>
+          </div>
+        </div>
+
+        <h2>Part 3: Initial Grid Scan</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <pre>
+for r in range(rows):
+    for c in range(cols):</pre
+            >
+            <p>
+              <strong>What it does:</strong> Nested loops to visit EVERY cell in
+              the grid.
+            </p>
+            <p>
+              <strong>Iteration order:</strong> Goes row by row, left to right
+              within each row.
+            </p>
+            <p>
+              <strong>Example:</strong> For a 3×3 grid, visits in order: (0,0),
+              (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)
+            </p>
+            <p>
+              <strong>Time complexity:</strong> O(rows × cols) - we touch each
+              cell once
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>
+if grid[r][c] == 1:
+    fresh += 1</pre
+            >
+            <p>
+              <strong>What it does:</strong> If the current cell is fresh (value
+              1), increment our counter.
+            </p>
+            <p>
+              <strong>Why:</strong> We need to know how many fresh oranges exist
+              so we can:
+            </p>
+            <ul style="margin-left: 25px">
+              <li>Know when to stop (fresh becomes 0)</li>
+              <li>Detect isolated oranges (fresh > 0 after BFS)</li>
+            </ul>
+          </div>
+
+          <div class="time-step">
+            <pre>
+elif grid[r][c] == 2:
+    queue.append((r, c))</pre
+            >
+            <p>
+              <strong>What it does:</strong> If the current cell is rotten
+              (value 2), add its position to the queue.
+            </p>
+            <p>
+              <strong>Format:</strong> <code>(r, c)</code> is a tuple containing
+              row and column.
+            </p>
+            <p>
+              <strong>Why:</strong> These are our BFS starting points! All
+              initial rot spreads from here.
+            </p>
+            <p>
+              <strong>Multi-source BFS:</strong> We might add multiple positions
+              here - that's the key!
+            </p>
+          </div>
+        </div>
+
+        <h2>Part 4: Edge Case Check</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <pre>
+if fresh == 0:
+    return 0</pre
+            >
+            <p>
+              <strong>What it does:</strong> If no fresh oranges exist,
+              immediately return 0.
+            </p>
+            <p><strong>Why this is important:</strong></p>
+            <ul style="margin-left: 25px">
+              <li>If the grid has no fresh oranges, there's nothing to rot!</li>
+              <li>
+                Answer is 0 minutes (not -1, because it's not "impossible")
+              </li>
+              <li>Saves time - no need to run BFS</li>
+            </ul>
+            <p><strong>Example scenarios:</strong></p>
+            <ul style="margin-left: 25px">
+              <li>All cells are empty: fresh=0, return 0</li>
+              <li>All cells are rotten: fresh=0, return 0</li>
+              <li>Mix of empty and rotten: fresh=0, return 0</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Part 5: BFS Setup</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <pre>minutes = 0</pre>
+            <p><strong>What it does:</strong> Initialize our time counter.</p>
+            <p>
+              <strong>Why start at 0:</strong> We increment BEFORE processing
+              each level, so the first level starts at minute 1.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]</pre>
+            <p>
+              <strong>What it does:</strong> Defines the 4 possible movement
+              directions.
+            </p>
+            <p><strong>Breakdown:</strong></p>
+            <ul style="margin-left: 25px">
+              <li><code>(-1, 0)</code> = up (row decreases)</li>
+              <li><code>(1, 0)</code> = down (row increases)</li>
+              <li><code>(0, -1)</code> = left (column decreases)</li>
+              <li><code>(0, 1)</code> = right (column increases)</li>
+            </ul>
+            <p>
+              <strong>Why a list:</strong> We can loop through all 4 directions
+              easily instead of writing 4 separate if-blocks!
+            </p>
+          </div>
+        </div>
+
+        <h2>Part 6: BFS Main Loop</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <pre>while queue and fresh > 0:</pre>
+            <p>
+              <strong>What it does:</strong> Continue BFS as long as BOTH
+              conditions are true.
+            </p>
+            <p>
+              <strong>Condition 1:</strong> <code>queue</code> is not empty
+              (there's work to do)
+            </p>
+            <p>
+              <strong>Condition 2:</strong> <code>fresh > 0</code> (there are
+              still oranges to rot)
+            </p>
+            <p><strong>Loop exits when:</strong></p>
+            <ul style="margin-left: 25px">
+              <li>Queue becomes empty (no more spread possible)</li>
+              <li>OR fresh becomes 0 (all oranges rotted!)</li>
+            </ul>
+          </div>
+
+          <div class="time-step">
+            <pre>level_size = len(queue)</pre>
+            <p>
+              <strong>What it does:</strong> Snapshot the current queue size.
+            </p>
+            <p>
+              <strong>CRITICAL TECHNIQUE:</strong> This number tells us how many
+              cells belong to the CURRENT level.
+            </p>
+            <p>
+              <strong>Why this works:</strong> At this point, the queue contains
+              ONLY cells from the current minute. Any cells we add during this
+              iteration belong to the NEXT minute.
+            </p>
+            <p>
+              <strong>Example:</strong> If level_size=3, we'll process exactly 3
+              cells, then move to the next minute.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>minutes += 1</pre>
+            <p><strong>What it does:</strong> Increment the time counter.</p>
+            <p>
+              <strong>When this happens:</strong> Once per level, BEFORE
+              processing that level.
+            </p>
+            <p>
+              <strong>Why here:</strong> After we finish processing all cells at
+              this level, one more minute will have passed.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>for _ in range(level_size):</pre>
+            <p>
+              <strong>What it does:</strong> Loop exactly
+              <code>level_size</code> times.
+            </p>
+            <p>
+              <strong>The underscore <code>_</code>:</strong> Python convention
+              for "I don't care about this variable". We just need to loop N
+              times.
+            </p>
+            <p>
+              <strong>Key insight:</strong> This ensures we only process the
+              current level, not cells added during this loop!
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>r, c = queue.popleft()</pre>
+            <p>
+              <strong>What it does:</strong> Remove and retrieve the first cell
+              from the queue.
+            </p>
+            <p>
+              <strong>Tuple unpacking:</strong>
+              <code>queue.popleft()</code> returns <code>(row, col)</code>,
+              which gets unpacked into <code>r</code> and <code>c</code>.
+            </p>
+            <p>
+              <strong>Why popleft:</strong> BFS requires FIFO (First In, First
+              Out). The oldest cells must be processed first.
+            </p>
+          </div>
+        </div>
+
+        <h2>Part 7: Checking Neighbors</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <pre>for dr, dc in directions:</pre>
+            <p>
+              <strong>What it does:</strong> Iterate through all 4 direction
+              vectors.
+            </p>
+            <p>
+              <strong>Each iteration:</strong> <code>dr, dc</code> takes on one
+              direction tuple.
+            </p>
+            <p><strong>Example:</strong> First iteration: dr=-1, dc=0 (up)</p>
+          </div>
+
+          <div class="time-step">
+            <pre>nr, nc = r + dr, c + dc</pre>
+            <p>
+              <strong>What it does:</strong> Calculate the neighbor's position.
+            </p>
+            <p>
+              <strong>Formula:</strong> Add the direction vector to current
+              position.
+            </p>
+            <p>
+              <strong>Example:</strong> If (r,c)=(2,2) and direction is up
+              (-1,0), then nr=1, nc=2
+            </p>
+            <p>
+              <strong>Variable names:</strong> <code>nr</code> = "new row",
+              <code>nc</code> = "new column"
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>
+if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:</pre
+            >
+            <p>
+              <strong>What it does:</strong> THREE checks combined with AND:
+            </p>
+            <p>
+              <strong>Check 1:</strong> <code>0 <= nr < rows</code> - Is the row
+              in bounds?
+            </p>
+            <p>
+              <strong>Check 2:</strong> <code>0 <= nc < cols</code> - Is the
+              column in bounds?
+            </p>
+            <p>
+              <strong>Check 3:</strong> <code>grid[nr][nc] == 1</code> - Is it a
+              fresh orange?
+            </p>
+            <p>
+              <strong>Short-circuit evaluation:</strong> If check 1 or 2 fails,
+              check 3 never executes (prevents index error!)
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>grid[nr][nc] = 2</pre>
+            <p>
+              <strong>What it does:</strong> Change the cell value from 1
+              (fresh) to 2 (rotten).
+            </p>
+            <p>
+              <strong>Why modify the grid:</strong> Marks the cell as "visited"
+              so we don't process it again.
+            </p>
+            <p>
+              <strong>Space optimization:</strong> No need for a separate
+              visited array!
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>fresh -= 1</pre>
+            <p>
+              <strong>What it does:</strong> Decrement the fresh orange counter.
+            </p>
+            <p>
+              <strong>Why:</strong> This orange just rotted, so it's no longer
+              fresh!
+            </p>
+            <p>
+              <strong>Loop termination:</strong> When this reaches 0, our job is
+              done.
+            </p>
+          </div>
+
+          <div class="time-step">
+            <pre>queue.append((nr, nc))</pre>
+            <p>
+              <strong>What it does:</strong> Add the newly rotten orange to the
+              queue.
+            </p>
+            <p>
+              <strong>Why:</strong> This orange will spread rot to ITS neighbors
+              in the NEXT minute!
+            </p>
+            <p>
+              <strong>Goes to the back:</strong> Will be processed after all
+              current-level cells finish.
+            </p>
+          </div>
+        </div>
+
+        <h2>Part 8: Return Result</h2>
+
+        <div class="visual-example">
+          <div class="time-step">
+            <pre>return minutes if fresh == 0 else -1</pre>
+            <p>
+              <strong>What it does:</strong> Conditional return (ternary
+              operator).
+            </p>
+            <p>
+              <strong>If fresh == 0:</strong> All oranges rotted successfully!
+              Return the number of minutes.
+            </p>
+            <p>
+              <strong>If fresh > 0:</strong> Some oranges are still fresh
+              (isolated!). Return -1 to indicate impossibility.
+            </p>
+            <p><strong>Equivalent to:</strong></p>
+            <pre>
+if fresh == 0:
+    return minutes
+else:
+    return -1</pre
+            >
+          </div>
+        </div>
+
+        <h2>Complexity Analysis</h2>
+
+        <div class="concept-box">
+          <h3>Time Complexity: O(rows × cols)</h3>
+          <p>
+            <strong>Initial scan:</strong> O(rows × cols) to visit every cell
+            once
+          </p>
+          <p>
+            <strong>BFS loop:</strong> Each cell is added to the queue at most
+            once, processed once → O(rows × cols)
+          </p>
+          <p>
+            <strong>Overall:</strong> O(rows × cols) + O(rows × cols) = O(rows ×
+            cols)
+          </p>
+
+          <h3 style="margin-top: 20px">Space Complexity: O(rows × cols)</h3>
+          <p>
+            <strong>Queue:</strong> In the worst case (e.g., all cells rotten
+            initially), the queue could hold all cells → O(rows × cols)
+          </p>
+          <p>
+            <strong>Grid modification:</strong> We modify in-place, so O(1)
+            extra space
+          </p>
+          <p><strong>Overall:</strong> O(rows × cols) dominated by the queue</p>
+        </div>
+
+        <div class="next-section">
+          <p>Now let's see how this code handles tricky edge cases!</p>
+          <a href="page6-edgecases.html" class="big-btn"
+            >Continue to Edge Cases →</a
+          >
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
