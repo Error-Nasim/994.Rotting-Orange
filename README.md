@@ -129,6 +129,3 @@ This project is created for educational purposes as part of AI Lab coursework.
 
 **Made with ❤️ by Team Nasim, Monika, Sumaiya & Razia**
 
-```
-
-```
